@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:lab1_2024/person.dart';
+import 'package:lab1_2024/weather.dart';
+import 'package:lab1_2024/weather_detail.dart';
 import 'details.dart';
 
 void main() {
@@ -69,6 +71,18 @@ class _MyHomePageState extends State<MyHomePage> {
     Person("Vladimir Obrizan", "Teacher")
   ];
 
+  late Future<WeatherInfo> weatherInfo;
+
+  @override
+  void initState() {
+    super.initState();
+
+    log("Завантажуємо погоду...");
+    weatherInfo = fetchWeather("Berlin");
+    weatherInfo.then((value) => {
+      log("$value")
+    });
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -81,6 +95,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  final cities = <String>[
+    "Berlin",
+    "Kyiv",
+    "Lviv",
+    "Barcelona",
+    "San Francisco"
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,15 +111,15 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: ListView.builder(
           padding: const EdgeInsets.all(0),
-          itemCount: persons.length,
+          itemCount: cities.length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
-              title: Text('${persons[index].fullName}'),
+                title: Text('${cities[index]}'),
                 onTap: () {
                   log('$index');
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => DetailsScreen(person: persons[index]))
+                      MaterialPageRoute(builder: (context) => WeatherDetailScreen(city: cities[index]))
                   );
                 }
 
@@ -106,5 +128,6 @@ class _MyHomePageState extends State<MyHomePage> {
         )
     );
   }
+
 
 }
